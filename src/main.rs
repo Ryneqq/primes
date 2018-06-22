@@ -1,17 +1,22 @@
 fn main() {
-    let (range, primes) = ((1000000000000000, 1000000001000000), 1000);
+    let (range, primes) = ((1000000000000000, 1000000000000100), 1000);
     // let generated = get_natural_numbers(range.0, range.1);
 
     // let range = (200000, 1100000);
-    let mut filter = PrimeFilter::new(range.0, range.1, primes);
-    println!("Start filtering, working on {:?} primes", primes);
-    let generated = filter.filter();
-    // println!("Sample: {:?}", generated);
-    println!("Primes are filtered, found: {:?}", generated.len());
-    println!("Numbers range: <{:?}, {:?}>", range.0, range.1);
-    println!("Total nummbers to compute: {:?}", range.1 - range.0);
+    // let mut filter = PrimeFilter::new(range.0, range.1, primes);
+    // println!("Start filtering, working on {:?} primes", primes);
+    // let generated = filter.filter();
+    // // println!("Sample: {:?}", generated);
+    // println!("Primes are filtered, found: {:?}", generated.len());
+    // println!("Numbers range: <{:?}, {:?}>", range.0, range.1);
+    // println!("Total nummbers to compute: {:?}", range.1 - range.0);
 
-    check_percentage_of_primes(generated.clone());
+    // check_percentage_of_primes(generated.clone());
+    // 1000000000000037
+153015847,
+    let key = 11746811 * 1993209007;
+    let cracked = crack(key, 3);
+    println!("We cracked the key: {:?}, primes: {:?} ", key, cracked);
 }
 
 fn check_percentage_of_primes(prime: Vec<u64>) {
@@ -22,7 +27,7 @@ fn check_percentage_of_primes(prime: Vec<u64>) {
     for p in prime {
         if check_prime(p) {
             quantity += 1;
-            // println!("Found a prime! It is a {:?}, hurray!, Left to check: {:?}", p, all - i);
+            println!("Found a prime! It is a {:?}, hurray!, Left to check: {:?}", p, all - i);
         }
         i += 1;
     }
@@ -31,6 +36,39 @@ fn check_percentage_of_primes(prime: Vec<u64>) {
 
     println!("Found: {:?} prime numbers", quantity);
     println!("Percentage in a sample: {:?}%", percentage);
+}
+
+fn check_prime(n: u64) -> bool {
+    if n == 2 { return true; }
+
+    match n > 2 && n % 2 != 0 {
+        false => false,
+        true  => {
+            let stop = (n as f64).sqrt().floor() as u64;
+            let mut modulo = 3;
+
+            while n % modulo != 0 && modulo < stop { modulo += 2; }
+            modulo >= stop
+        }
+    }
+}
+
+fn crack(key: u64, quality: u64) -> (u64, u64) {
+    let m = (key as f64).sqrt().floor() as u64;
+    let n = (m as f64).sqrt().floor() as u64;
+    
+    println!("Start filtering, cracking key: {:?}, sqrt^2: {:?}, sqrt^4: {:?}", key, m, n);
+    let mut filter = PrimeFilter::new(n, m, quality);
+    let primes = filter.filter();
+    println!("Found {:?} primes", primes.len());
+
+    for prime in primes {
+         match key % prime == 0 {
+            true => return (prime, key/prime),
+            false => ()
+        }
+    }
+    (0,0)
 }
 
 #[derive(Clone, Debug)]
@@ -104,33 +142,6 @@ impl  PrimeFilter {
         }
     }
 }
-
-fn check_prime(n: u64) -> bool {
-    if n == 2 { return true; }
-
-    match n > 2 && n % 2 != 0 {
-        false => false,
-        true  => {
-            let stop = (n as f64).sqrt().floor() as u64;
-            let mut modulo = 3;
-
-            while n % modulo != 0 && modulo < stop { modulo += 2; }
-            modulo >= stop
-        }
-    }
-}
-
-// fn digit_sum(n: u32) -> u32 {
-//     let mut n = n;
-//     let mut sum = 0;
-
-//     while n > 1 {
-//         sum += n % 10;
-//         n = (n as f64 /10).floor() as u32;
-//     }
-
-//     sum
-// }
 
 #[cfg(test)]
 mod tests {
