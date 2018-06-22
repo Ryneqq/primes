@@ -1,8 +1,7 @@
 fn main() {
-    let (range, primes) = ((1000000000000000, 1000000000000100), 1000);
-    // let generated = get_natural_numbers(range.0, range.1);
+    let (range, primes) = ((0, 100000000), 3);
 
-    // let range = (200000, 1100000);
+    // // let range = (200000, 1100000);
     // let mut filter = PrimeFilter::new(range.0, range.1, primes);
     // println!("Start filtering, working on {:?} primes", primes);
     // let generated = filter.filter();
@@ -13,10 +12,16 @@ fn main() {
 
     // check_percentage_of_primes(generated.clone());
     // 1000000000000037
-153015847,
-    let key = 11746811 * 1993209007;
-    let cracked = crack(key, 3);
-    println!("We cracked the key: {:?}, primes: {:?} ", key, cracked);
+// 153015847,
+//11746811,
+    // let key: u64 = 11746811 * 1993209007;
+    // // let cracked = crack_classic(key);
+    // // println!("We cracked the key: {:?}, primes: {:?} ", key, cracked);
+
+    // println!("key % 12373 {:?}", key % 12373);
+
+    let primes = first_n_numbers(range.1);
+    println!("Generated primes: {:?}", primes.len());
 }
 
 fn check_percentage_of_primes(prime: Vec<u64>) {
@@ -27,7 +32,7 @@ fn check_percentage_of_primes(prime: Vec<u64>) {
     for p in prime {
         if check_prime(p) {
             quantity += 1;
-            println!("Found a prime! It is a {:?}, hurray!, Left to check: {:?}", p, all - i);
+            // println!("Found a prime! It is a {:?}, hurray!, Left to check: {:?}", p, all - i);
         }
         i += 1;
     }
@@ -36,6 +41,30 @@ fn check_percentage_of_primes(prime: Vec<u64>) {
 
     println!("Found: {:?} prime numbers", quantity);
     println!("Percentage in a sample: {:?}%", percentage);
+}
+
+fn first_n_primes(quantity: u64) -> Vec<u64> {
+    let mut primes = Vec::new();
+    let (mut k, mut n) = (0, 2);
+
+    while quantity > k {
+        if check_prime(n) { primes.push(n); k += 1; }
+        n += 1;
+    }
+
+    primes
+}
+
+fn first_n_numbers(quantity: u64) -> Vec<u64> {
+    let mut primes = Vec::new();
+    let mut n = 2;
+
+    while quantity > n {
+        if check_prime(n) { primes.push(n);}
+        n += 1;
+    }
+
+    primes
 }
 
 fn check_prime(n: u64) -> bool {
@@ -61,7 +90,7 @@ fn crack(key: u64, quality: u64) -> (u64, u64) {
     let mut filter = PrimeFilter::new(n, m, quality);
     let primes = filter.filter();
     println!("Found {:?} primes", primes.len());
-
+    // let primes = primes.iter().rev().map(|p| *p).collect::<Vec<u64>>();
     for prime in primes {
          match key % prime == 0 {
             true => return (prime, key/prime),
@@ -70,6 +99,28 @@ fn crack(key: u64, quality: u64) -> (u64, u64) {
     }
     (0,0)
 }
+
+fn crack_classic(key: u64) -> (u64, u64) {
+    let m = (key as f64).sqrt().floor() as u64;
+    let n = (m as f64).sqrt().floor() as u64;
+    
+    println!("Start filtering, cracking key: {:?}, sqrt^2: {:?}, sqrt^4: {:?}", key, m, n);
+
+    // for prime in n..m {
+    //      match key % prime == 0 {
+    //         true => return (prime, key/prime),
+    //         false => ()
+    //     }
+    // }
+     for prime in n..m {
+         match check_prime(prime) {
+            true => return (prime, key/prime),
+            false => ()
+        }
+    }
+    (0, 0)
+}
+
 
 #[derive(Clone, Debug)]
 pub struct PrimeFilter {
@@ -159,14 +210,6 @@ mod tests {
             assert!(!check_prime(24));
             assert!(!check_prime(69));
             assert!(!check_prime(144));
-        }
-
-        #[test]
-        fn thousand_primes() {
-            let prime = prime(0);
-            prime.iter()
-                .map(|p| assert!(check_prime(*p), format!("not a prime: {:?}", *p)))
-                .next();
         }
     }
 }
