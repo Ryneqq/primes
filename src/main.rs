@@ -1,14 +1,12 @@
 fn main() {
-    let (range, primes) = ((0, 100000000), 3);
+    let (range, primes) = ((1000000000, 2000000000), 200);
 
-    // // let range = (200000, 1100000);
-    // let mut filter = PrimeFilter::new(range.0, range.1, primes);
-    // println!("Start filtering, working on {:?} primes", primes);
-    // let generated = filter.filter();
-    // // println!("Sample: {:?}", generated);
-    // println!("Primes are filtered, found: {:?}", generated.len());
-    // println!("Numbers range: <{:?}, {:?}>", range.0, range.1);
-    // println!("Total nummbers to compute: {:?}", range.1 - range.0);
+    let mut filter = PrimeFilter::new(range.0, range.1, primes);
+    println!("Start filtering, working on {:?} primes", primes);
+    let generated = filter.filter();
+    println!("Primes are filtered, found: {:?}", generated.len());
+    println!("Numbers range: <{:?}, {:?}>", range.0, range.1);
+    println!("Total nummbers to compute: {:?}", range.1 - range.0);
 
     // check_percentage_of_primes(generated.clone());
     // 1000000000000037
@@ -20,8 +18,8 @@ fn main() {
 
     // println!("key % 12373 {:?}", key % 12373);
 
-    let primes = first_n_numbers(range.1);
-    println!("Generated primes: {:?}", primes.len());
+    // let primes = first_n_numbers(range.1);
+    // println!("Generated primes: {:?}", primes.len());
 }
 
 fn check_percentage_of_primes(prime: Vec<u64>) {
